@@ -1,0 +1,44 @@
+[Unit]
+Description=Nimbus Agent
+Documentation=https://github.com/nimbus-project/nimbus
+After=network.target
+
+[Service]
+Type=simple
+User=nimbus
+Group=nimbus
+ExecStart=/usr/local/bin/nimbusd --config /etc/nimbus/nimbusd.toml
+Restart=on-failure
+RestartSec=5s
+LimitNOFILE=1048576
+LimitNPROC=512
+PrivateTmp=true
+ProtectSystem=full
+NoNewPrivileges=true
+WorkingDirectory=/var/lib/nimbus
+
+# Security options
+CapabilityBoundingSet=
+DeviceAllow=
+DevicePolicy=closed
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectProc=invisible
+ProtectSystem=strict
+ReadWritePaths=/var/lib/nimbus
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@aio @chown @clock @cpu-emulation @debug @keyring @memlock @module @mount @obsolete @privileged @raw-io @reboot @resources @setuid @swap
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

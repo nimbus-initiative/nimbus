@@ -1,0 +1,114 @@
+# Nimbus Provider Configuration
+# This file defines various hardware providers and their configurations
+
+[nimbus.metal.providers.aws]
+region = "us-west-2"
+host_model = "AWS r6i.metal"
+type = "aws"
+cpu = "Intel Xeon Platinum 8375C"
+cpu_sockets = 2
+cpu_cores = 32
+cpu_threads = 64
+ram = "1024G"
+gpu = null
+fpga = null
+hypervisor = null
+bmc = false
+
+[nimbus.metal.providers.aws.metadata]
+vendor = "Amazon Web Services"
+api_version = "2023-01-01"
+
+[nimbus.metal.providers.baremetal::dell-r740]
+region = "onprem"
+host_model = "Dell PowerEdge R740"
+type = "baremetal"
+cpu = "Intel Xeon Gold 6248R"
+cpu_sockets = 2
+cpu_cores = 24
+cpu_threads = 48
+ram = "768G"
+gpu = "NVIDIA A100"
+fpga = null
+hypervisor = null
+bmc = true
+
+[nimbus.metal.providers.baremetal::dell-r740.bmc_config]
+address = "192.168.1.100"
+protocol = "redfish"
+username = "admin"
+password = "your-secure-password-here"
+insecure = false
+
+[nimbus.metal.providers.baremetal::dell-r740.pxe]
+enabled = true
+kernel_url = "http://pxe.example.com/kernels/linux/vmlinuz"
+initrd_url = "http://pxe.example.com/kernels/linux/initrd.img"
+cmdline = "console=tty0 console=ttyS0,115200n8"
+
+[nimbus.metal.providers.baremetal::dell-r740.metadata]
+rack = "A1"
+row = "1"
+location = "Data Center East"
+
+[nimbus.metal.providers.gcp::a3-megagpu-16g]
+region = "us-central1"
+host_model = "GCP A3 Megagpu"
+type = "gcp"
+cpu = "Intel Xeon (Cascade Lake)"
+cpu_sockets = 1
+cpu_cores = 96
+cpu_threads = 96
+ram = "1364G"
+gpu = "NVIDIA H100"
+fpga = null
+hypervisor = "KVM"
+bmc = false
+
+[nimbus.metal.providers.gcp::a3-megagpu-16g.metadata]
+service_account = "nimbus-service-account@gcp-project.iam.gserviceaccount.com"
+network_tier = "PREMIUM"
+
+[nimbus.metal.providers.azure::nd96amsr-a100-v4]
+region = "eastus"
+host_model = "Azure ND96amsr A100 v4"
+type = "azure"
+cpu = "AMD EPYC 7V12"
+cpu_sockets = 2
+cpu_cores = 96
+cpu_threads = 192
+ram = "2048G"
+gpu = "NVIDIA A100 80GB"
+fpga = null
+hypervisor = "Hyper-V"
+bmc = false
+
+[nimbus.metal.providers.azure::nd96amsr-a100-v4.metadata]
+resource_group = "nimbus-rg"
+subscription_id = "00000000-0000-0000-0000-000000000000"
+
+[nimbus.metal.providers.baremetal::custom-server]
+region = "onprem"
+host_model = "Custom Server Build"
+type = "baremetal"
+cpu = "AMD EPYC 7763"
+cpu_sockets = 2
+cpu_cores = 64
+cpu_threads = 128
+ram = "512G"
+gpu = "NVIDIA RTX A6000"
+fpga = "Xilinx Alveo U280"
+hypervisor = null
+bmc = true
+
+[nimbus.metal.providers.baremetal::custom-server.bmc_config]
+address = "192.168.1.101"
+protocol = "ipmi"
+username = "admin"
+password = "another-secure-password"
+insecure = true
+
+[nimbus.metal.providers.baremetal::custom-server.metadata]
+owner = "ml-team"
+purpose = "machine-learning"
+maintenance_window = "sunday 02:00-06:00"

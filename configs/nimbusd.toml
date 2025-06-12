@@ -1,0 +1,118 @@
+# Nimbus Agent (nimbusd) Configuration
+
+[agent]
+# Unique identifier for this agent
+id = "auto-generated-uuid"
+
+# Data directory for agent state
+data_dir = "/var/lib/nimbus"
+
+# Logging configuration
+[log]
+level = "info"
+format = "text"
+output = "stdout"
+
+# Hardware discovery settings
+[discovery]
+# How often to refresh hardware information (in seconds)
+refresh_interval = 300
+
+# Paths to check for hardware information
+paths = [
+    "/sys/class/dmi/id",
+    "/proc/cpuinfo",
+    "/proc/meminfo",
+    "/sys/block"
+]
+
+# Provider configuration
+[provider]
+# Provider name (must match the name in the registry)
+name = ""
+
+# Path to the provider's private key
+private_key_path = "/etc/nimbus/keys/private.pem"
+
+# Public key that will be used to identify this provider
+public_key_path = "/etc/nimbus/keys/public.pem"
+
+# Network configuration
+[network]
+# Address and port to listen on
+listen_address = "0.0.0.0:8443"
+
+# Path to the SSH private key for the agent
+ssh_private_key_path = "/etc/nimbus/ssh/id_ed25519"
+
+# Path to the SSH authorized_keys file
+authorized_keys_path = "/etc/nimbus/ssh/authorized_keys"
+
+# API configuration
+[api]
+enabled = true
+address = "127.0.0.1:8080"
+
+# Authentication token (automatically generated if empty)
+token = ""
+
+# Optional: Remote management configuration
+[management]
+# Type of management interface (ipmi, redfish, idrac, none)
+type = "none"
+
+# Management interface address
+address = ""
+
+# Management interface credentials (or use environment variables)
+username = ""
+password = ""
+
+# Optional: Metrics collection
+[metrics]
+enabled = true
+address = "127.0.0.1:9100"
+
+# Optional: Integration with monitoring systems
+[monitoring]
+# Prometheus push gateway URL
+push_gateway = ""
+
+# Optional: Backup configuration
+[backup]
+enabled = false
+schedule = "0 2 * * *"  # Daily at 2 AM
+retention_days = 7
+
+# Optional: Update settings
+[updates]
+enabled = true
+check_interval = 3600  # 1 hour
+channel = "stable"
+
+# Optional: Plugin configuration
+[plugins]
+disabled = []
+
+# Optional: Custom resource tags
+[tags]
+environment = "production"
+location = ""
+
+# Optional: Alerting configuration
+[alerts]
+enabled = false
+# Add alert manager configuration here
+
+# Optional: TLS configuration
+[tls]
+enabled = false
+cert_file = ""
+key_file = ""
+ca_file = ""
+
+# Optional: Rate limiting
+[rate_limit]
+enabled = true
+requests_per_second = 10
+burst = 20

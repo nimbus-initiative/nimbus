@@ -1,0 +1,130 @@
+# Example bare metal provisioning configuration for Nimbus
+
+[network]
+interface = "eth0"  # Network interface for PXE boot
+network = "192.168.1.0/24"
+netmask = "255.255.255.0"
+gateway = "192.168.1.1"
+dns_servers = ["8.8.8.8", "8.8.4.4"]
+ntp = "pool.ntp.org"
+
+[network.dhcp_range]
+start = "192.168.1.100"
+end = "192.168.1.200"
+
+[pxe]
+enabled = true
+kernel = "/var/lib/tftpboot/pxelinux/vmlinuz"
+initrd = "/var/lib/tftpboot/pxelinux/initrd.img"
+cmdline = "console=tty0 console=ttyS0,115200n8"
+http_addr = ":8080"
+tftp_addr = ":69"
+dhcp_addr = ":67"
+root_dir = "/srv/pxeboot"
+
+[bmc]
+protocol = "ipmi"  # or "redfish"
+username = "admin"
+password = "changeme"
+insecure_skip_verify = true  # Only for testing
+
+[os]
+type = "linux"
+version = "ubuntu-20.04"
+source = "http://archive.ubuntu.com/ubuntu/dists/focal/main/installer-amd64/"
+root_password = "$6$rounds=656000$VXqy5aTxC8mURTeH$X5XyWz0UvJvPmeORyQ8X5v5J5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X"  # hashed password
+
+[[os.ssh_keys]]
+key = "ssh-rsa AAAAB3NzaC1yc2E... user@example.com"
+
+[os.disk]
+device = "/dev/sda"
+filesystem = "ext4"
+use_lvm = true
+partition_scheme = "gpt"
+
+[[os.disk.partitions]]
+mount_point = "/boot/efi"
+size_mb = 512
+filesystem = "vfat"
+
+[[os.disk.partitions]]
+mount_point = "/boot"
+size_mb = 1024
+filesystem = "ext4"
+
+[[os.disk.partitions]]
+mount_point = "/"
+size_mb = 0  # Use remaining space
+filesystem = "ext4"
+
+[os.network]
+hostname = "nimbus-node-01"
+nameservers = ["8.8.8.8", "8.8.4.4"]
+search_domains = ["example.com"]
+
+[[os.network.interfaces]]
+name = "eth0"
+address = "192.168.1.10"
+netmask = "255.255.255.0"
+gateway = "192.168.1.1"
+dhcp = false
+on_boot = true
+default_route = true
+
+[os.packages]
+# List of packages to install
+packages = [
+  "openssh-server",
+  "curl",
+  "wget",
+  "htop",
+  "tmux"
+]
+
+[post_install]
+enable_ssh = true
+password_authentication = false
+permit_root_login = false
+timezone = "UTC"
+locale = "en_US.UTF-8"
+
+[[post_install.commands]]
+# Commands to run after installation
+commands = [
+  "systemctl enable --now ssh",
+  "ufw allow ssh",
+  "echo 'Nimbus node provisioned successfully' > /etc/motd"
+]
+
+# Example host definition
+[[hosts]]
+hostname = "nimbus-node-01"
+mac = "00:11:22:33:44:55"
+
+[hosts.bmc]
+address = "192.168.1.50"
+protocol = "ipmi"
+username = "admin"
+password = "changeme"
+
+[hosts.hardware]
+[hosts.hardware.cpu]
+vendor = "Intel"
+model = "Xeon E5-2650 v4"
+cores = 12
+threads = 24
+
+[hosts.hardware]
+memory = 65536  # 64GB in MB
+
+[[hosts.hardware.disks]]
+device = "/dev/sda"
+size_gb = 1000
+model = "Samsung SSD 860 EVO 1TB"
+
+[[hosts.hardware.nics]]
+name = "eth0"
+mac = "00:11:22:33:44:55"
+speed_mbps = 1000
+duplex_full = true

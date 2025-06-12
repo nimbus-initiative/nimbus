@@ -1,0 +1,73 @@
+# Nimbus Provider Configuration
+# This file describes a hardware provider's resources and capabilities
+
+[provider]
+name = "example-llc"
+description = "Example LLC's Bare Metal Cloud"
+contact = "ops@example.com"
+location = "US-East"
+
+# Authentication method for provisioning
+[auth]
+# SSH public key for secure access
+ssh_public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI..."
+# Optional: IPMI/Redfish credentials
+ipmi_user = "admin"
+# Note: In production, use environment variables or a secrets manager for sensitive data
+
+# Hardware specifications
+[hardware]
+# Machine type (maps to specific hardware configurations)
+machine_type = "r6i.metal"
+# Actual hardware model
+model = "Dell PowerEdge R750"
+
+# CPU details
+[cpu]
+model = "Intel Xeon Gold 6348"
+cores = 28
+threads_per_core = 2
+architecture = "x86_64"
+
+# Memory
+[memory]
+total_gb = 1024
+channels = 8
+
+# Storage (list all available disks)
+[[storage]]
+device = "/dev/nvme0n1"
+size_gb = 1900
+media = "nvme"
+
+[[storage]]
+device = "/dev/sda"
+size_gb = 8000
+media = "hdd"
+
+# Network interfaces
+[[network]]
+name = "eth0"
+mac = "00:11:22:33:44:55"
+speed_gbps = 10
+
+# Optional: Out-of-band management
+[management]
+type = "idrac"
+address = "192.168.1.100"
+
+# Scheduling preferences
+[scheduling]
+max_instances = 5
+preferred_workloads = ["kubernetes", "databases"]
+
+# Maintenance window
+[maintenance]
+window = "Sundays 02:00-04:00 UTC"
+notice_days = 7
+
+# Billing (if applicable)
+[billing]
+model = "per_hour"
+price_per_hour = 0.50
+currency = "USD"
