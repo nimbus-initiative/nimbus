@@ -1,0 +1,122 @@
+# Set default behavior to automatically normalize line endings.
+* text=auto eol=lf
+
+# Force batch files to use CRLF line endings so they can be executed in Windows CMD.
+*.cmd    text eol=crlf
+*.bat    text eol=crlf
+*.ps1    text eol=crlf
+
+# Force shell scripts to use LF line endings.
+*.sh     text eol=lf
+
+# Mark these files as binary (don't modify line endings).
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.eot    binary
+*.ttf    binary
+*.woff   binary
+*.woff2  binary
+*.otf    binary
+*.svg    binary
+
+# Define the file types for diffing.
+*.go     diff=golang
+*.md     diff=markdown
+*.yaml   diff=yaml
+*.yml    diff=yaml
+*.json   diff=json
+*.toml   diff=toml
+
+# Custom merge drivers
+*.pb.go  merge=binary
+*.pb.gw.go merge=binary
+*.pb.gw.gw.go merge=binary
+
+# Generated files should not be modified directly
+**/generated/** -text
+**/vendor/** -text
+
+# Large files that should not be tracked by Git LFS
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.gz  filter=lfs diff=lfs merge=lfs -text
+*.tar filter=lfs diff=lfs merge=lfs -text
+*.pdf filter=lfs diff=lfs merge=lfs -text
+*.bin filter=lfs diff=lfs merge=lfs -text
+*.exe filter=lfs diff=lfs merge=lfs -text
+*.dll filter=lfs diff=lfs merge=lfs -text
+*.so  filter=lfs diff=lfs merge=lfs -text
+*.dylib filter=lfs diff=lfs merge=lfs -text
+
+# Don't diff binary files
+*.pb.go -diff
+*.pb.gw.go -diff
+*.pb.gw.gw.go -diff
+
+# Ensure that files are checked out with the right line endings on Windows
+* text=auto eol=lf
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
+
+# Denote all files that are truly binary and should not be modified.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.mov binary
+*.mp4 binary
+*.mp3 binary
+*.flv binary
+*.fla binary
+*.swf binary
+*.gz binary
+*.zip binary
+*.7z binary
+*.ttf binary
+*.eot binary
+*.woff binary
+*.woff2 binary
+*.otf binary
+*.svg binary
+*.pdf binary
+*.doc binary
+*.docx binary
+*.xls binary
+*.xlsx binary
+*.ppt binary
+*.pptx binary
+*.vsd binary
+*.vsdx binary
+*.pem binary
+*.crt binary
+*.key binary
+*.p12 binary
+*.pfx binary
+*.der binary
+*.cer binary
+*.p7b binary
+*.p7c binary
+*.p7s binary
+*.p12 binary
+*.pfx binary
+*.pem binary
+*.crt binary
+*.key binary
+*.der binary
+*.p7b binary
+*.p7c binary
+*.p7s binary
+*.cer binary
+*.p12 binary
+*.pfx binary
+*.pem binary
+*.crt binary
+*.key binary
+*.der binary
+*.p7b binary
+*.p7c binary
+*.p7s binary
+*.cer binary

@@ -1,0 +1,186 @@
+# This is an example goreleaser.yaml file with some sensible defaults.
+# Make sure to check the documentation at http://goreleaser.com
+
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod download
+    # You may remove this if you don't need go generate
+    - go generate ./...
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: darwin
+        goarch: arm64
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser
+    binary: nimbusd
+    no_unique_dist_dir: true
+
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: darwin
+        goarch: arm64
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser
+    binary: nimbusctl
+    no_unique_dist_dir: true
+
+archives:
+  - format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- if eq .Os "darwin" }}macOS_
+      {{- else if eq .Arch "amd64" }}{{ .Os }}_x86_64
+      {{- else }}{{ .Os }}_{{ .Arch }}{{ end }}
+      {{- if eq .Os "windows" }}.zip{{ else }}.tar.gz{{ end }}
+    files:
+      - LICENSE
+      - README.md
+      - CHANGELOG.md
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ .Tag }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - '^ci:'
+      - '^build:'
+
+release:
+  github:
+    owner: nimbus-project
+    name: nimbus
+  prerelease: auto
+  name_template: '{{ .ProjectName }} {{ .Version }} ({{ .Os }})'
+  extra_files:
+    - glob: ./**/*.tar.gz
+    - glob: ./**/*.zip
+    - glob: ./**/*.txt
+
+# The nfpm section configures the creation of .deb and .rpm packages
+# Uncomment and configure as needed
+# nfpm:
+#   name: nimbus
+#   homepage: https://github.com/nimbus-project/nimbus
+#   maintainer: Nimbus Team <team@nimbus.example.com>
+#   description: |
+#     Nimbus is a decentralized, peer-optional, GitOps-driven bare metal cloud platform.
+#   license: MIT
+#   formats:
+#     - deb
+#     - rpm
+#   dependencies:
+#     - git
+#     - openssh-client
+#   contents:
+#     - src: ./scripts/nimbusd.service
+#       dst: /lib/systemd/system/nimbusd.service
+#     - src: ./bin/nimbusd
+#       dst: /usr/local/bin/nimbusd
+#     - src: ./bin/nimbusctl
+#       dst: /usr/local/bin/nimbusctl
+#   config_files:
+#     ./config/nimbusd.toml: /etc/nimbus/nimbusd.toml
+
+# Docker images configuration
+# Uncomment and configure as needed
+# dockers:
+#   - image_templates:
+#       - "ghcr.io/nimbus-project/nimbus:{{ .Version }}"
+#       - "ghcr.io/nimbus-project/nimbus:latest"
+#     dockerfile: ./Dockerfile
+#     use: buildx
+#     build_flag_templates:
+#       - --platform=linux/amd64,linux/arm64
+#       - --label=org.opencontainers.image.title=Nimbus
+#       - --label=org.opencontainers.image.description="A decentralized, peer-optional, GitOps-driven bare metal cloud platform"
+#       - --label=org.opencontainers.image.url=https://github.com/nimbus-project/nimbus
+#       - --label=org.opencontainers.image.source=https://github.com/nimbus-project/nimbus
+#       - --label=org.opencontainers.image.version={{.Version}}
+#       - --label=org.opencontainers.image.created={{.Date}}
+#       - --label=org.opencontainers.image.licenses=MIT
+#     extra_files:
+#       - ./LICENSE
+#       - ./README.md
+
+# Homebrew tap configuration
+# Uncomment and configure as needed
+# brews:
+#   - name: nimbus
+#     tap:
+#       owner: nimbus-project
+#       name: homebrew-tap
+#     folder: Formula
+#     homepage: https://github.com/nimbus-project/nimbus
+#     description: A decentralized, peer-optional, GitOps-driven bare metal cloud platform
+#     license: MIT
+#     install: |
+#       bin.install "nimbusd"
+#       bin.install "nimbusctl"
+#     test: |
+#       system "#{bin}/nimbusd --version"
+#       system "#{bin}/nimbusctl --version"
+#     dependencies:
+#       - git
+#       - openssh
+
+# Scoop configuration for Windows
+# Uncomment and configure as needed
+# scoops:
+#   - name: nimbus
+#     bucket:
+#       owner: nimbus-project
+#       name: scoop-bucket
+#       token: "{{ .Env.SCOOP_TOKEN }}"
+#     homepage: https://github.com/nimbus-project/nimbus
+#     description: A decentralized, peer-optional, GitOps-driven bare metal cloud platform
+#     license: MIT
+#     url_template: https://github.com/nimbus-project/nimbus/releases/download/v{{ .Version }}/nimbus_{{ .Os }}_{{ .Arch }}.zip
+#     bin: ["nimbusd.exe", "nimbusctl.exe"]
+#     persist: ["data"]
+#     checkver:
+#       url: https://github.com/nimbus-project/nimbus/releases/latest
+#       re: v([\d.]+)
+#     autoupdate:
+#       architecture:
+#         map:
+#           amd64: 64bit
+#       url: https://github.com/nimbus-project/nimbus/releases/download/v$version/nimbus_windows_$arch.zip
+#       hash:
+#         url: https://github.com/nimbus-project/nimbus/releases/download/v$version/checksums.txt
+#         find: nimbus_windows_$arch.zip
