@@ -1,0 +1,73 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+dist/
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Nimbus specific
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+
+# Logs
+*.log
+
+# Local configuration
+configs/local-*.toml
+
+# Build output
+/nimbusd
+/nimbusctl
+
+# Development environment
+.env
+.env.local
+
+# Temporary files
+/tmp/
+/temp/
+
+# Coverage files
+coverage.txt
+profile.cov
+coverage.html
+
+# Binaries built with -race
+*-race*
+
+# Output of go mod vendor
+/vendor/
